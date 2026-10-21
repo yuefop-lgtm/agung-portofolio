@@ -159,6 +159,7 @@ function renderDashboard() {
 function renderSubjects() {
   $("subjectList").innerHTML = data.subjects.map(s => `
     <article class="item-card">
+      ${s.imageDataUrl ? `<img class="entry-photo" src="${s.imageDataUrl}" alt="${escapeHTML(s.name)}" loading="lazy">` : ""}
       <h3>📚 ${escapeHTML(s.name)}</h3>
       <p>${escapeHTML(s.note || "Belum ada catatan materi.")}</p>
       <div class="item-actions">
@@ -170,6 +171,7 @@ function renderSubjects() {
 function renderSports() {
   $("sportList").innerHTML = data.sports.map(s => `
     <article class="item-card">
+      ${s.imageDataUrl ? `<img class="entry-photo" src="${s.imageDataUrl}" alt="${escapeHTML(s.name)}" loading="lazy">` : ""}
       <h3>⚡ ${escapeHTML(s.name)}</h3>
       <p>📅 ${escapeHTML(s.day)} · ⏰ ${escapeHTML(s.time)}</p>
       <div class="item-actions">
@@ -257,34 +259,56 @@ $("profileForm").addEventListener("submit", event => {
   }
 });
 
-$("subjectForm").addEventListener("submit", event => {
+$("subjectForm").addEventListener("submit", async event => {
   event.preventDefault();
+  let imageDataUrl = "";
+  try {
+    imageDataUrl = await readOptionalImage("subjectImage");
+  } catch (error) {
+    notify(error.message);
+    return;
+  }
+
   data.subjects.push({
     id: makeId(),
     name: $("subjectName").value.trim(),
-    note: $("subjectNote").value.trim()
+    note: $("subjectNote").value.trim(),
+    imageDataUrl
   });
   if (saveData()) {
     $("subjectForm").reset();
     renderSubjects();
     renderDashboard();
     notify("Pelajaran berhasil ditambahkan.");
+  } else {
+    data.subjects.pop();
   }
 });
 
-$("sportForm").addEventListener("submit", event => {
+$("sportForm").addEventListener("submit", async event => {
   event.preventDefault();
+  let imageDataUrl = "";
+  try {
+    imageDataUrl = await readOptionalImage("sportImage");
+  } catch (error) {
+    notify(error.message);
+    return;
+  }
+
   data.sports.push({
     id: makeId(),
     name: $("sportName").value.trim(),
     day: $("sportDay").value,
-    time: $("sportTime").value
+    time: $("sportTime").value,
+    imageDataUrl
   });
   if (saveData()) {
     $("sportName").value = "";
     renderSports();
     renderDashboard();
     notify("Jadwal olahraga tersimpan.");
+  } else {
+    data.sports.pop();
   }
 });
 
@@ -351,6 +375,18 @@ function readFile(file) {
     reader.onerror = () => reject(new Error("File tidak dapat dibaca."));
     reader.readAsDataURL(file);
   });
+}
+
+async function readOptionalImage(inputId) {
+  const file = $(inputId).files[0];
+  if (!file) return "";
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Pilih file gambar terlebih dahulu.");
+  }
+  if (file.size > 350 * 1024) {
+    throw new Error("Ukuran foto maksimal 350 KB.");
+  }
+  return readFile(file);
 }
 
 $("attendanceForm").addEventListener("submit", event => {
@@ -505,7 +541,23 @@ function createParticles() {
   }
 }
 
+function createLightning() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const scheduleStrike = () => {
+    setTimeout(() => {
+      document.body.style.setProperty("--strike-x", `${15 + Math.random() * 70}%`);
+      document.body.classList.add("lightning-flash");
+      setTimeout(() => document.body.classList.remove("lightning-flash"), 480);
+      scheduleStrike();
+    }, 7000 + Math.random() * 9000);
+  };
+
+  scheduleStrike();
+}
+
 createParticles();
+createLightning();
 updateClock();
 setInterval(updateClock, 30000);
 

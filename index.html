@@ -14,6 +14,13 @@
 
   <section id="intro" class="intro">
     <div class="intro-orb">写</div>
+    <div class="intro-scene" aria-hidden="true">
+      <div class="scene-ring"></div>
+      <div class="scene-ring scene-ring-inner"></div>
+      <span class="scene-bolt">ϟ</span>
+      <span class="scene-strike"></span>
+      <span class="scene-label">CHIDORI · LIGHTNING STYLE</span>
+    </div>
     <div class="eyebrow">SHINOBI COMMAND CENTER</div>
     <h1>AGUNG KUSUMA<br><span>TRI ATMAJA</span></h1>
     <p>PERSONAL DASHBOARD — <span>SASUKE EDITION</span></p>
@@ -135,6 +142,7 @@
             <form id="subjectForm" class="form-grid">
               <label>Nama mata pelajaran<input id="subjectName" required maxlength="80" placeholder="Contoh: Matematika"></label>
               <label>Catatan materi<textarea id="subjectNote" rows="3" placeholder="Materi yang ingin dipelajari"></textarea></label>
+              <label>Foto pelajaran<input id="subjectImage" type="file" accept="image/*"></label>
               <button class="primary-btn" type="submit">＋ Tambah Pelajaran</button>
             </form>
           </article>
@@ -148,6 +156,7 @@
               <label>Nama aktivitas<input id="sportName" required maxlength="80" placeholder="Contoh: Jogging"></label>
               <label>Hari<select id="sportDay"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select></label>
               <label>Waktu<input id="sportTime" type="time" value="16:00" required></label>
+              <label>Foto aktivitas<input id="sportImage" type="file" accept="image/*"></label>
               <button class="primary-btn" type="submit">＋ Tambah Jadwal</button>
             </form>
           </article>
