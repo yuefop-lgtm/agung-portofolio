@@ -1,0 +1,8 @@
+{
+  "name": "agung-jujutsu-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dashboard portofolio personal Agung dengan tema energi kutukan ungu",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" }
+}
